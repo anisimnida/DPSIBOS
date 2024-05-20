@@ -1,0 +1,11 @@
+# BELAJAR MEMBUAT APLIKASI BACKEND MENGGUNAKAN NODEJS DAN EXPRESS
+
+## Author
+
+Nama:
+
+Gemilang Tirto Ismoyo Santoso
+
+NIM:
+
+2100016062
