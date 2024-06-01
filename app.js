@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var app = express();
 var sequelize = require('./models/index'); // 
-// var authRouter = require('./routes/auth');
+var authRouter = require('./routes/auth');
 
 
 // view engine setup
@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 
 // catch 404 and forward to error handler
@@ -43,13 +43,5 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-// // Sinkronkan model dengan database
-// sequelize.sync()
-//   .then(() => {
-//     console.log('Database synchronized');
-//   })
-//   .catch(err => {
-//     console.error('Error synchronizing database:', err);
-//   });
 
 module.exports = app;

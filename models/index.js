@@ -17,6 +17,8 @@ const Product = require('./product')(sequelize);
 const Order = require('./order')(sequelize);
 const OrderDetail = require('./orderDetail')(sequelize);
 
+const User = require('./user')(sequelize);
+
 
 // Define associations
 Product.belongsTo(Supplier, { foreignKey: 'supplierID' });
@@ -47,5 +49,6 @@ module.exports = {
     Category,
     Order,
     OrderDetail,
-    Shipper
+    Shipper,
+    User,
 };
