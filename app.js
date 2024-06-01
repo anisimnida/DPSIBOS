@@ -5,14 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var productsRouter = require('./routes/products');
-var categoriesRouter = require('./routes/categories'); // Impor rute categories
 var app = express();
-var sequelize = require('./models/index'); // Impor sequelize
-var Category = require('./models/category'); // Impor model Category
-var Product = require('./models/product'); // Impor model Product
-var authRouter = require('./routes/auth');
+var sequelize = require('./models/index'); // 
+// var authRouter = require('./routes/auth');
 
 
 // view engine setup
@@ -24,14 +19,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static('uploads')); // Middleware untuk menyajikan file statis
+// app.use('/uploads', express.static('uploads')); // Middleware untuk menyajikan file statis
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/products', productsRouter);
-app.use('/categories', categoriesRouter); // Gunakan rute categories
-app.use('/auth', authRouter);
+// app.use('/users', usersRouter);
+// app.use('/auth', authRouter);
 
 
 // catch 404 and forward to error handler
@@ -50,13 +43,13 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-// Sinkronkan model dengan database
-sequelize.sync()
-  .then(() => {
-    console.log('Database synchronized');
-  })
-  .catch(err => {
-    console.error('Error synchronizing database:', err);
-  });
+// // Sinkronkan model dengan database
+// sequelize.sync()
+//   .then(() => {
+//     console.log('Database synchronized');
+//   })
+//   .catch(err => {
+//     console.error('Error synchronizing database:', err);
+//   });
 
 module.exports = app;
