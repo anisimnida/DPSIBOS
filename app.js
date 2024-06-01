@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var app = express();
 var sequelize = require('./models/index'); // 
 var authRouter = require('./routes/auth');
+var usersRouter = require('./routes/users');
 
 
 // view engine setup
@@ -19,11 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use('/uploads', express.static('uploads')); // Middleware untuk menyajikan file statis
+app.use('/uploads', express.static('uploads')); // Middleware untuk menyajikan file statis
 
 
 app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 
 
