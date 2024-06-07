@@ -10,6 +10,8 @@ var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var customerRouter = require('./routes/customer');
 var categoryRouter = require('./routes/category');
+var supplierRouter = require('./routes/supplierRoutes');
+var productRouter = require('./routes/productRoutes');
 
 
 // view engine setup
@@ -21,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 // Middleware to handle errors
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
@@ -39,6 +42,8 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/customer', customerRouter);
 app.use('/category', categoryRouter);
+app.use('/supplier', supplierRouter);
+app.use('/product', productRouter);
 
 sequelize.sequelize.sync().then(() => {
   console.log('Connection has been established successfully.');
