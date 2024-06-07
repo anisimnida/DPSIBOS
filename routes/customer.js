@@ -1,10 +1,11 @@
 // routes/customerRoutes.js
 const express = require('express');
 const router = express.Router();
-const { Customer } = require('../models'); // Assuming you have a Customer model
+const { Customer } = require('../models');
+const { authenticate } = require('../middleware/auth');
 
 // Route to create a new customer
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     try {
         const { customerName, contactName, address, city, postalCode, country } = req.body;
         const customer = await Customer.create({ customerName, contactName, address, city, postalCode, country });
@@ -14,8 +15,9 @@ router.post('/', async (req, res) => {
     }
 });
 
+
 // Route to get all customers
-router.get('/', async (req, res) => {
+router.get('/',authenticate , async (req, res) => {
     try {
         const customers = await Customer.findAll();
         if (customers.length === 0) {
@@ -29,7 +31,7 @@ router.get('/', async (req, res) => {
 });
 
 // Route to get a customer by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id',authenticate , async (req, res) => {
     try {
         const { id } = req.params;
         const customer = await Customer.findByPk(id);

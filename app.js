@@ -9,6 +9,7 @@ var sequelize = require('./models/index');
 var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var customerRouter = require('./routes/customer');
+var categoryRouter = require('./routes/category');
 
 
 // view engine setup
@@ -20,6 +21,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// Middleware to handle errors
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+      res.status(401).json({ message: 'Token is not valid' });
+  } else {
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
 app.use('/uploads', express.static('uploads')); // Middleware untuk menyajikan file statis
 
 
@@ -27,6 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/customer', customerRouter);
+app.use('/category', categoryRouter);
 
 sequelize.sequelize.sync().then(() => {
   console.log('Connection has been established successfully.');
