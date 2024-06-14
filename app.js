@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -10,11 +11,12 @@ var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var customerRouter = require('./routes/customer');
 var categoryRouter = require('./routes/category');
-var supplierRouter = require('./routes/supplierRoutes');
-var productRouter = require('./routes/productRoutes');
+var supplierRouter = require('./routes/supplier');
+var productRouter = require('./routes/product');
 
 
 // view engine setup
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 

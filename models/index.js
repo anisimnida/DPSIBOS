@@ -1,10 +1,7 @@
 const { Sequelize } = require('sequelize');
 
 // Konfigurasi koneksi Sequelize
-const sequelize = new Sequelize('dpsi24', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
+const sequelize = new Sequelize(process.env.DB_URI);
 
 
 const Customer = require('./customer')(sequelize);
