@@ -16,18 +16,53 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Route to get all suppliers
+// router.get('/', authenticate, async (req, res) => {
+//     try {
+//         const suppliers = await Supplier.findAll();
+//         if (suppliers.length === 0) {
+//             res.status(404).json({ message: 'Suppliers not found' });
+//         } else {
+//             res.json(suppliers);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
 router.get('/', authenticate, async (req, res) => {
+    let { page = 1, limit = 10 } = req.query; // Default page 1 and limit 10 per page
+
+    // Validate and parse limit to ensure it's a number
+    limit = parseInt(limit, 10);
+
     try {
-        const suppliers = await Supplier.findAll();
+        const offset = (page - 1) * limit;
+
+        const { count, rows: suppliers } = await Supplier.findAndCountAll({
+            offset,
+            limit,
+        });
+
         if (suppliers.length === 0) {
-            res.status(404).json({ message: 'Suppliers not found' });
-        } else {
-            res.json(suppliers);
+            return res.status(404).json({ message: 'Suppliers not found' });
         }
+
+        const totalPages = Math.ceil(count / limit);
+
+        const response = {
+            totalCount: count,
+            totalPages,
+            currentPage: page,
+            suppliers,
+        };
+
+        res.json(response);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching suppliers:', error);
+        res.status(500).json({ message: 'Failed to fetch suppliers' });
     }
 });
+
 
 // Route to get a supplier by ID
 router.get('/:id', authenticate, async (req, res) => {

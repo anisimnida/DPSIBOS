@@ -7,13 +7,11 @@ const sequelize = new Sequelize(process.env.DB_URI);
 const Customer = require('./customer')(sequelize);
 const Category = require('./category')(sequelize);
 const Shipper = require('./shipper')(sequelize);
-
 const Employee = require('./employee')(sequelize);
 const Supplier = require('./supplier')(sequelize);
 const Product = require('./product')(sequelize);
 const Order = require('./order')(sequelize);
 const OrderDetail = require('./orderDetail')(sequelize);
-
 const User = require('./user')(sequelize);
 
 

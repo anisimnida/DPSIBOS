@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { Customer } = require('../models');
 const { authenticate } = require('../middleware/auth');
+const { Op } = require('sequelize');
 
 // Route to create a new customer
 router.post('/', authenticate, async (req, res) => {
@@ -17,18 +18,54 @@ router.post('/', authenticate, async (req, res) => {
 
 
 // Route to get all customers
-router.get('/',authenticate , async (req, res) => {
+// router.get('/',authenticate , async (req, res) => {
+//     try {
+//         const customers = await Customer.findAll();
+//         if (customers.length === 0) {
+//             res.status(404).json({ message: 'Customers not found' });
+//         } else {
+//             res.json(customers);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+
+router.get('/', authenticate, async (req, res) => {
+    let { page = 1, limit = 10 } = req.query; // Default page 1 and limit 10 per page
+
+    // Validate and parse limit to ensure it's a number
+    limit = parseInt(limit, 10);
+
     try {
-        const customers = await Customer.findAll();
+        const offset = (page - 1) * limit;
+
+        const { count, rows: customers } = await Customer.findAndCountAll({
+            offset,
+            limit,
+        });
+
         if (customers.length === 0) {
-            res.status(404).json({ message: 'Customers not found' });
-        } else {
-            res.json(customers);
+            return res.status(404).json({ message: 'Customers not found' });
         }
+
+        const totalPages = Math.ceil(count / limit);
+
+        const response = {
+            totalCount: count,
+            totalPages,
+            currentPage: page,
+            customers,
+        };
+
+        res.json(response);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 
 // Route to get a customer by ID
 router.get('/:id',authenticate , async (req, res) => {

@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { Category } = require('../models');
 const { authenticate } = require('../middleware/auth');
+const { Op } = require('sequelize');
 
 // Route to create a new category
 router.post('/', authenticate, async (req, res) => {
@@ -16,18 +17,53 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Route to get all categories
+// router.get('/', async (req, res) => {
+//     try {
+//         const categories = await Category.findAll();
+//         if (categories.length === 0) {
+//             res.status(404).json({ message: 'Categories not found' });
+//         } else {
+//             res.json(categories);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
 router.get('/', async (req, res) => {
+    let { page = 1, limit = 10 } = req.query; // Default page 1 and limit 10 per page
+
+    // Validate and parse limit to ensure it's a number
+    limit = parseInt(limit, 10);
+
     try {
-        const categories = await Category.findAll();
-        if (categories.length === 0) {
+        const offset = (page - 1) * limit;
+
+        const categories = await Category.findAndCountAll({
+            offset,
+            limit,
+        });
+
+        if (categories.rows.length === 0) {
             res.status(404).json({ message: 'Categories not found' });
         } else {
-            res.json(categories);
+            const totalCount = categories.count;
+            const totalPages = Math.ceil(totalCount / limit);
+
+            const response = {
+                totalCount,
+                totalPages,
+                currentPage: page,
+                categories: categories.rows,
+            };
+
+            res.json(response);
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 // Route to get a category by ID
 router.get('/:id', authenticate, async (req, res) => {

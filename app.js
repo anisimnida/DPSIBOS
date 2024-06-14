@@ -13,10 +13,13 @@ var customerRouter = require('./routes/customer');
 var categoryRouter = require('./routes/category');
 var supplierRouter = require('./routes/supplier');
 var productRouter = require('./routes/product');
+var shipperRouter = require('./routes/shipper');
+var employeeRouter = require('./routes/employee');
+var ordersRouter = require('./routes/orders');
+var orderDetailRouter = require('./routes/orderDetail');
 
 
 // view engine setup
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -46,6 +49,11 @@ app.use('/customer', customerRouter);
 app.use('/category', categoryRouter);
 app.use('/supplier', supplierRouter);
 app.use('/product', productRouter);
+app.use('/shipper', shipperRouter);
+app.use('/employee', employeeRouter);
+app.use('/orders', ordersRouter);
+app.use('/orderDetail', orderDetailRouter);
+
 
 sequelize.sequelize.sync().then(() => {
   console.log('Connection has been established successfully.');

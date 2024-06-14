@@ -19,18 +19,55 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Route to get all products
+// router.get('/', authenticate, async (req, res) => {
+//     try {
+//         const products = await Product.findAll();
+//         if (products.length === 0) {
+//             res.status(404).json({ message: 'Products not found' });
+//         } else {
+//             res.json(products);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+const { Op } = require('sequelize');
+
 router.get('/', authenticate, async (req, res) => {
+    let { page = 1, limit = 10 } = req.query; // Default page 1 and limit 10 per page
+
+    // Validate and parse limit to ensure it's a number
+    limit = parseInt(limit, 10);
+
     try {
-        const products = await Product.findAll();
+        const offset = (page - 1) * limit;
+
+        const { count, rows: products } = await Product.findAndCountAll({
+            offset,
+            limit,
+        });
+
         if (products.length === 0) {
-            res.status(404).json({ message: 'Products not found' });
-        } else {
-            res.json(products);
+            return res.status(404).json({ message: 'Products not found' });
         }
+
+        const totalPages = Math.ceil(count / limit);
+
+        const response = {
+            totalCount: count,
+            totalPages,
+            currentPage: page,
+            products,
+        };
+
+        res.json(response);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Failed to fetch products' });
     }
 });
+
 
 // Route to get a product by ID
 router.get('/:id', authenticate, async (req, res) => {
