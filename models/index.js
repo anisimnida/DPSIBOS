@@ -1,7 +1,12 @@
 const { Sequelize } = require('sequelize');
 
 // Konfigurasi koneksi Sequelize
-const sequelize = new Sequelize(process.env.DB_URI);
+// const sequelize = new Sequelize(process.env.DB_URI);
+
+const sequelize = new Sequelize('dpsibos', 'root', '', {
+  host: 'localhost',
+  dialect: 'mysql'
+});
 
 
 const Customer = require('./customer')(sequelize);
@@ -34,7 +39,8 @@ sequelize.sync()
   .catch(err => {
     console.error('Error synchronizing database:', err);
   });
-  
+
+
 module.exports = {
     sequelize,
     Customer,
